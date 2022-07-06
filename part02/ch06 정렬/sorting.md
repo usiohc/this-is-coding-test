@@ -68,3 +68,82 @@
 다만 여기서 기억해야할 내용은 삽입 정렬은 현재 리스트의 데이터가 거의 정렬되어 있는 상태라면 매우 빠르게 동작한다는 점이다.     
 
 최선의 경우 **O(N)** 의 시간복잡도를 가진다.
+
+<br>
+
+## 퀵 정렬
+#### 가장 많이 사용되는 알고리즘
+#### 비슷한 속도를 가지는 "병합 정렬" 알고리즘도 있음
+
+#### 기준 데이터를 성정하고 그 기준보다 큰 데이터와 작은 데이터의 위치를 바꾸는 것
+
+퀵 정렬에서는 피벗(pivot)이 사용되는데, 큰 숫자와 작은 숫자를 교환할 때 교환하기 위한 기준을 피벗이라고 표현함
+
+퀵 정렬을 수행하기 전에 피벗을 어떻게 설정할 것인지 미리 명시해야한다.
+
+피벗을 설정하고 리스트를 분할하는 방법에 따라서 여러가지 방식으로 구분하는데, 책에서는 호어 분할 방식을 기준으로 설명한다.
+
+- 호어 분할 방식 = 리스트에서 첫번째 데이터를 피벗으로 정한다.
+
+1. 피벗을 설정하고 왼쪽에서부터는 피벗보다 큰 데이터를 찾는다.
+2. 오른쪽에서부터는 피벗보다 작은 데이터를 찾는다.
+3. 그다음 큰데이터와 작은 데이터의 위치를 서로 교환해준다.
+4. 정렬이 될 때까지 반복한다.   
+
+<br>
+
+#### 가장 직관적인 형태의 퀵 정렬 소스코드
+
+    array = [5, 7, 9, 0, 3, 1, 6, 2, 4, 8]
+
+    def quick_sort(array, start, end):
+        if start >= end:
+            return
+        pivot = start
+        left = start + 1
+        right = end
+
+        while left <= right:
+            while left <= end and array[left] <= array[pivot]:
+                left += 1
+            while right > start and array[right] >= array[pivot]:
+                right -= 1
+
+            if left > right:
+                array[right], array[pivot] = array[pivot], array[pivot]
+            else:
+                array[left], array[right] = array[right], array[left]
+
+        quick_sort(array, start, right - 1)
+        quick_sort(array, right + 1, end)
+
+    quick_sort(array, 0, len(array) - 1)
+    print(array)
+
+#### 파이썬의 장점을 살린 퀵 정렬 소스코드
+
+    array = [5, 7, 9, 0, 3, 1, 6, 2, 4, 8]
+
+    def quick_sort(array):
+        if len(array) <= 1:
+            return array
+        
+        pivot = array[0]
+        tail = array[1:]
+
+        left_side = [x for x in tail if x <= pivot]
+        right_side = [x for x in tail if x > pivot]
+
+        return quick_srot(left_side) + [pivot] + quick_sort(right_side)
+
+    print(quick_sort(array))
+
+### 퀵 정렬의 시간 복잡도
+
+선택 정렬과 삽입 정렬의 시간 복잡도는 O(N^2)이다.
+또, 최악의 경우에도 항상 시간복잡도 O(N^2)을 보장한다.
+
+퀵 정렬의 평균 시간 복잡도는 **O(N log N)** 이고, 최악일 경우에는 O(N^2)이다.
+
+데이터가 무작위로 입력되는 경우 퀵 정렬은 빠르게 동작할 확률이 높지만, 이미 데이터가 정렬되어 있는 경우 에는 매우 느리게 동작한다.
+
